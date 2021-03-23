@@ -444,7 +444,7 @@ curl \
 -d '{
 {
   "external_round_id": "partner-round-id-1",
-  "game_id": "game-1",
+  "game_id": "ePz8u6hbncrNzFRCqLbX8e",
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds
 ```
