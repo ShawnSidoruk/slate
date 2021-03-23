@@ -371,7 +371,8 @@ curl \
 -H "Content-Type: application/json" \
 -H "X-API-Key: [vendor-api-key]" \
 -X POST \
-https://ns-api-staging.betable.com/lfs/v100/users/user-1/sessions
+https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/sessions
 ```
 
 `POST /users/{user_id}/sessions`
@@ -425,7 +426,8 @@ curl \
 {
   "external_round_id": "vendor-round-id-1",
   "game_id": "game-1",
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds
 ```
 `POST /users/{user_id}/rounds`
 
@@ -481,7 +483,8 @@ curl \
 -H "Content-Type: application/json" \
 -H "X-API-Key: [vendor-api-key]" \
 -X PUT \
-https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/close
+https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/close
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/close`
@@ -528,7 +531,8 @@ curl \
 -d '{
   "external_wager_id": "vendor-wager-id-1",
   "amount": "5.00",
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/wagers
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/wagers
 ```
 
 `POST /users/{user_id}/rounds/{round_id}/wagers`
@@ -590,7 +594,8 @@ curl \
 -X PUT \
 -d '{
   "context": "additional information to include with the wager"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/wagers/wager-1/settle
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/wagers/rD9c1IqMhlgLlwTEz0xbB3/settle
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/wagers/{wager_id}/settle`
@@ -635,7 +640,8 @@ curl \
 -X PUT \
 -d '{
   "context": "game error"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/wagers/wager-1/void
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/wagers/rD9c1IqMhlgLlwTEz0xbB3/void
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/wagers/{wager_id}/void`
@@ -683,7 +689,8 @@ curl \
 -X PUT \
 -d '{
   "context": "game error"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/wagers/wager-1/rollback
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/wagers/rD9c1IqMhlgLlwTEz0xbB3/rollback
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/wagers/{wager_id}/rollback`
@@ -741,7 +748,8 @@ curl \
   "external_payout_id": "vendor-payout-id-1",
   "source_wager_id": "rD9c1IqMhlgLlwTEz0xbB3",
   "amount": "10.00"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/payouts
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/payouts
 ```
 
 `POST /users/{user_id}/rounds/{round_id}/payouts`
@@ -814,7 +822,8 @@ curl \
 -X PUT \
 -d '{
   "context": "Liberty Bell, Liberty Bell, Liberty Bell"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/payouts/payout-1/settle
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/payouts/8OJyF5NX1AtIRLMHXHMrqC/settle
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/payouts/{payout_id}/settle`
@@ -872,7 +881,8 @@ curl \
 -X PUT \
 -d '{
   "context": "game error"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/payouts/payout-1/void
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/payouts/8OJyF5NX1AtIRLMHXHMrqC/void
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/payouts/{payout_id}/void`
@@ -920,7 +930,8 @@ curl \
 -X PUT \
 -d '{
   "context": "incorrect amount awarded"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/payouts/payout-1/rollback
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/payouts/8OJyF5NX1AtIRLMHXHMrqC/rollback
 ```
 
 `PUT /users/{user_id}/rounds/{round_id}/payouts/{payout_id}/rollback`
@@ -968,7 +979,8 @@ curl \
 -H "Content-Type: application/json" \
 -H "X-API-Key: [vendor-api-key]" \
 -X GET \
-https://ns-api-staging.betable.com/lfs/v100/users/user-1/balance
+https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/balance
 ```
 
 `GET /users/{user_id}/balance`
@@ -1023,7 +1035,8 @@ curl \
 -X PUT \
 -d '{
   "amount": "500.00"
-}' https://ns-api-staging.betable.com/lfs/v100/users/user-1/balance
+}' https://ns-api-staging.betable.com/lfs/v100\
+/users/QEaakM0qumTJd5tj/balance
 ```
 
 `PUT /users/{user_id}/balance`
@@ -1076,7 +1089,8 @@ curl \
   "external_game_id": "pgp-game-id-1",
   "game_name": "The Numeric Alphabet Game",
   "unencumber_value": "1.00",
-}' https://ns-api-staging.betable.com/lfs/v100/games
+}' https://ns-api-staging.betable.com/lfs/v100\
+/games
 ```
 
 `POST /games`
