@@ -48,9 +48,9 @@ All API method calls must be made using a secure connection with TLS/1.2.
 
 ## API Endpoints
 
-On staging, all API endpoints begin with `https://ns-api.betable.com/lfs/v100`.
+On staging, all API endpoints begin with `https://ns-api-staging.betable.com/lfs/v100`.
 
-On production, all API endpoints begin with `https://ns-api-staging.betable.com/lfs/v100`.
+On production, all API endpoints begin with `https://ns-api.betable.com/lfs/v100`.
 
 ## IP Whitelisting
 The Betable API exposed in this document is not a public API.  In addition to other protocol measures, only a list of static IP Address(es) will be permitted to communicate on this API.  
@@ -94,7 +94,7 @@ curl \
 Although not required, all requests are encouraged to include a unique identifer in the header. Tracing is not used in operational integrity but can be used as a reference in post-processing as the header will be reflected on the response and can be used to correlate a request and response. The `X-Trace-ID` reference is only stored for for 14 days.
 
 <aside class="notice">
-The `X-Trace-ID` should also be provided, where possible, for support requests.
+The <code>X-Trace-ID</code> should also be provided, where possible, for support requests.
 </aside>
 
 ## Idempotent Requests (Optional)
@@ -153,8 +153,6 @@ Name | Type | Description
  ---| ---| ---
 error\_description | string | A description of the error encountered; see common errors below or each API method section.
 
-SPS
-
 # Health Check
 ## Health
 
@@ -163,7 +161,7 @@ SPS
 This method is used to ensure communication with the Betable API is functional. The main usage of this endpoint is to assure that the IP Addresses are properly whitelisted.
 
 <aside class="comment">
-The `X-API-Key` is not required to access this API method.
+The <code>X-API-Key</code> is not required to access this API method.
 </aside>
 
 
@@ -361,7 +359,7 @@ This method updates a user's account information.
 | 409 | email address already in use |
 
 <aside class="success">
-The `user_id` returned should be used in subsequent API calls where a `user_id` is required as part of the URI.
+The <code>user_id</code> returned should be used in subsequent API calls where a <code>user_id</code> is required as part of the URI.
 </aside>
 
 # Sessions
@@ -491,7 +489,7 @@ https://ns-api-staging.betable.com/lfs/v100/users/user-1/rounds/round-1/close
 This method is used for closing a Round. A round can consist of zero or more Wagers, and zero or more Payouts. After a round is closed then no additional Wagers or Payouts can be associated to the Round.
 
 <aside class="warning">
-All `authorized` Wagers and Payouts must be resolved (ie. settled or void) before the Round can be closed.
+All <code>authorized</code> Wagers and Payouts must be resolved (ie. settled or void) before the Round can be closed.
 </aside>
 
 ### URI Parameters
