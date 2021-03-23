@@ -39,6 +39,8 @@ A `Wager` is any entry or bet placed by a player.
 A `Payout` represents an amount won by a player.
 
 
+# API Overview
+
 ## API Domains
 
 On staging, all API endpoints begin with `https://ns-api-staging.betable.com/lfs/v100`.
@@ -116,18 +118,9 @@ curl \
 
 The API supports idempotency for safely retrying requests without performing the same operation twice. A unique identifier added to the header on `POST` or `PUT` requests ensures that the same request is not processed multiple times. If a duplicate request is sent, the original response will be returned without any processing. Only successfully processed requests will have their responses stored for idempotency, thus when retrying the same request a new idempotency key does not need to be generated.
 
-<aside class="notice">
+<aside class="comment">
 The Betable API will store the idempotency keys and response for 30 days.
 </aside>
-
-## Common Data Types
-
-The Betable API uses the standard JSON data types for all fields of the request and response payloads with the addition of these custom data types:
-
-Data Type | JSON Type | Description | Example Value
---------- | ------- | ----------- | ------
-`Date` | string | Using the following format: yyyy-MM-dd | 1969-04-20
-`Money` | string | All monetary amounts are represented as a string. | 199.99
 
 ## Response Codes and Statuses
 
@@ -135,15 +128,15 @@ Data Type | JSON Type | Description | Example Value
 
 HTTP Status Code | Description
 ---- | -----------
-`200` | Request processed, response contains details.
-`201` | Request processed, entity created, response contains details.
-`204` | Request processed, no response details.
-`208` | Request previously processed successfully, response contains details from original request.
-`400` | Validation error.
-`401` | Unauthorized, see section: Authentication
-`404` | Requested entity not found.
-`409` | Request not processable due to business logic, entity state, or other reason(s).
-`500` | Unexpected runtime error.  May try again.
+`200 OK` | Request processed, response contains details.
+`201 Created` | Request processed, entity created, response contains details.
+`204 No Content` | Request processed, no response details.
+`208 Already Reported` | Request previously processed successfully, response contains details from original request.
+`400 Bad Request` | Validation error.
+`401 Unauthorized` | Unauthorized, see section: Authentication
+`404 Not Found` | Requested entity not found.
+`409 Conflict` | Request not processable due to business logic, entity state, or other reason(s).
+`500 Internal Error` | Unexpected runtime error.  May try again.
 
 ### Error Codes
 
@@ -155,16 +148,34 @@ HTTP Status Code | Description
 }
 ```
 
-For each non-`2XX` status code returned, a JSON body will be returned to provide more context about the error encountered.
+## Common Data Structures
 
+### JSON Data Types
+The Betable API uses the standard JSON data types for all fields of the request and response payloads with the addition of these custom data types:
+
+Data Type | JSON Type | Description | Example Value
+--------- | ------- | ----------- | ------
+`Date` | string | Using the following format: yyyy-MM-dd | 1969-04-20
+`Money` | string | All monetary amounts are represented as a string. | 199.99
+
+For each non-`2XX` status code returned, a JSON body will be returned to provide more context about the error encountered.
 
 Name | Type | Description
  ---| ---| ---
 error\_description | string | A description of the error encountered; see common errors below or each API method section.
 
+### Common Error Responses
 
+Each API method can return a number of common error responses:
+
+HTTP Status Code | Error Description
+---- | -----------
+`400 Bad Request` | Validation error.
+`401 Unauthorized` | Unauthorized, see section: Authentication
+`500 Internal Error` | Unexpected runtime error.  May try again.
 
 # Health Check
+
 ## Health
 
 `GET /health`
@@ -294,7 +305,6 @@ The <code>user_id</code> returned should be used in subsequent API calls where a
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, the user with `external_user_id` was already created |
 | `409 Conflict` | Email address already in use |
 | `409 Conflict` | `external_user_id` already in use |
 
@@ -375,11 +385,8 @@ This method updates a user's account information.
 | HTTP Status Code | Description |
 | ---| --- |
 | `204 No Content` | Success, No Content |
-| `208 Already Reported` | Success, the user was already updated |
 | `404 Not Found` | User not found |
 | `409 Conflict` | Email address already in use |
-
-
 
 # Sessions
 
@@ -490,9 +497,9 @@ This <code>round_id</code> is used in subsequent calls when required as part of 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the round with `external_round_id` was already created |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Game not found |
+| `409 Conflict` | Round already exists with `external_round_id` |
 
 ## Close Round
 
@@ -531,9 +538,9 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `204 No Content` | Success
-| `208 Already Reported` | Success, if the round was already closed |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
+| `409 Conflict` | Round was already closed |
 | `409 Conflict` | Wager is not resolved |
 | `409 Conflict` | Payout is not resolved |
 
@@ -597,9 +604,9 @@ This <code>wager_id</code> is used in subsequent calls when required as part of 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, the wager with `external_wager_id` was already created |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
+| `409 Conflict` | Wager with `external_wager_id` was already created |
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Insufficient funds |
 
@@ -641,10 +648,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the wager was already settled |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
+| `409 Conflict` | Wager was already settled |
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Wager already void |
 
@@ -691,10 +698,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the wager was already voided |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
+| `409 Conflict` | Wager was already voided |
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Wager already settled |
 
@@ -744,10 +751,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the wager was already rolled back |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
+| `409 Conflict` | Wager was already rolled back |
 | `409 Conflict` | Wager already voided |
 | `409 Conflict` | Wager already forfeited |
 | `409 Conflict` | Wager has associated payouts; rollback payout first |
@@ -823,9 +830,9 @@ This <code>payout_id</code> is used in subsequent calls when required as part of
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, the payout with `external_payout_id` was already created |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
+| `409 Conflict` | Payout with `external_payout_id` already created |
 | `409 Conflict` | Round already closed |
 | `409 Not Found` | Source wager not found |
 | `409 Conflict` | Source wager is not settled |
@@ -869,10 +876,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the payout was already settled |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
+| `409 Conflict` | Payout was already settled |
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Payout already void |
 
@@ -932,10 +939,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the payout was already voided |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
+| `409 Conflict` | Payout already voided |
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Payout already settled |
 
@@ -981,10 +988,10 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, if the payout was already rolled back |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
+| `409 Conflict` | Payout already rolled back |
 | `409 Conflict` | Payout already voided |
 | `409 Conflict` | Payout already forfeited |
 
@@ -1155,5 +1162,4 @@ This <code>game_id</code> is used in subsequent calls when required as part of t
 | HTTP Status Code | Error Description |
 | ---| --- |
 | `201 Created` | Success
-| `208 Already Reported` | Success, the game with `external_game_id` was already created |
-| `409 Conflict` | A game with `external_game_id` already exists |
+| `409 Conflict` | Game with `external_game_id` already exists |
