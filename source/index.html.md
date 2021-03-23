@@ -882,20 +882,6 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | `409 Conflict` | Round already closed |
 | `409 Conflict` | Payout already void |
 
-### Response
-
-A successful request returns the HTTP `204 No Content` status code with no JSON response body.
-
-### Error Codes
-
-| HTTP Status Code | Error Description |
-| ---| --- |
-| 404 | user not found |
-| 404 | round not found |
-| 404 | payout not found |
-| 409 | round is closed |
-| 409 | payout already void |
-
 ## Void Payout
 
 ```shell
