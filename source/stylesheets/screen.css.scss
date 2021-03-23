@@ -74,8 +74,11 @@ html, body {
   // This is the logo at the top of the ToC
   .logo {
     display: block;
-    max-width: 100%;
-    margin-bottom: $logo-margin;
+    max-width: 70%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 20px;
+    margin-bottom: 30px;
   }
 
   &>.search {
@@ -180,7 +183,7 @@ html, body {
     border-top: 1px dashed $nav-footer-border-color;
 
     li,a {
-      color: $nav-text;
+      color: $nav-text-secondary;
       text-decoration: none;
     }
 
@@ -399,6 +402,7 @@ html, body {
 
   table {
     margin-bottom: 1em;
+    min-width:75%;
     overflow: auto;
     th,td {
       text-align: left;
