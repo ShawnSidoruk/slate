@@ -778,7 +778,7 @@ curl \
 
 `POST /users/{user_id}/rounds/{round_id}/payouts`
 
-This method is used for creating and authorizing a Payout, such as for awarding winnings to a player. When possible, a Payout should be associated to a Wager.
+This method is used for creating and authorizing a Payout, such as when awarding winnings to a player. When possible, a Payout should be associated to a Wager.
 
 An authorized Payout needs to be settled using [Settle Payout](#settle-payout) before the funds are transfered to the player's wallet.
 
