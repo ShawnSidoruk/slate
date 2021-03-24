@@ -242,12 +242,12 @@ curl \
     "phone": false,
     "post": false
   },
-  "affiliate_details": [
+  "affiliate_details": {
     {
       "affiliate_program_id": "adwords",
       "affiliate_campaign_id": "ga-campaign-2020-xmas"
     }
-  ]
+  }
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
 `POST /users`
@@ -334,12 +334,12 @@ curl \
     "phone": false,
     "post": false
   },
-  "affiliate_details": [
+  "affiliate_details": {
     {
       "affiliate_program_id": "adwords",
       "affiliate_campaign_id": "ga-campaign-2020-xmas"
     }
-  ]
+  }
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
 
