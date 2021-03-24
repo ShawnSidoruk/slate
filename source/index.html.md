@@ -234,19 +234,19 @@ curl \
     "postcode": "12345",
     "city": "Springfield",
     "state": "IL",
-    "country": "US",
+    "country": "US"
   },
   "comms_preferences": {
     "email": true,
     "sms": true,
     "phone": false,
-    "post": false,
+    "post": false
   },
   "affiliate_details": [
     {
       "affiliate_program_id": "adwords",
-      "affiliate_campaign_id": "ga-campaign-2020-xmas",
-    },
+      "affiliate_campaign_id": "ga-campaign-2020-xmas"
+    }
   ]
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
@@ -326,19 +326,19 @@ curl \
     "address3": "Gladwell Street",
     "city": "Springfield",
     "state": "IL",
-    "country": "US",
+    "country": "US"
   },
   "comms_preferences": {
     "email": true,
     "sms": true,
     "phone": false,
-    "post": false,
+    "post": false
   },
   "affiliate_details": [
     {
       "affiliate_program_id": "adwords",
-      "affiliate_campaign_id": "ga-campaign-2020-xmas",
-    },
+      "affiliate_campaign_id": "ga-campaign-2020-xmas"
+    }
   ]
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
