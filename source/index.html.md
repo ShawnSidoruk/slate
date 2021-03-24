@@ -450,7 +450,7 @@ curl \
 -X POST \
 -d '{
   "external_round_id": "partner-round-id-1",
-  "external_game_id": "ePz8u6hbncrNzFRCqLbX8e"
+  "external_game_id": "ePz8u6hbncrNzFRCqLbX8e",
   "external_game_label": "Starburst"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds
@@ -462,7 +462,7 @@ This method creates a round. A round is a container used for grouping together w
 A round can consist of zero or more Wagers, and zero or more Payouts. The choice of how many Wagers and Payouts to include in a round is up to the integration partner.
 
 <aside>
-Wagers and Payouts will be presented back to the player using the <code>external_game_label</code> provided by the Round.
+Wagers and Payouts will be presented back to the player using the <code>external_game_label</code> provided for the Round.
 </aside>
 
 ### URI Parameters
@@ -1031,11 +1031,11 @@ A successful request returns the HTTP `200 OK` status code with the following JS
 
 
 <aside class="comment">
-Currency code <code>XXX</code> will be used to represent free money funds.
+Currency code <code>XXX</code> will be used to represent simulated currencies.
 </aside>
 
 <aside class="comment">
-Currencies are associated to accounts during creation of the integration.
+Possible currencies returned are setup within the Betable API during the initial phases of partner integration
 </aside>
 
 | HTTP Status Code | Error Description |
