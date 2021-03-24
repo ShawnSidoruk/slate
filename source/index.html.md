@@ -450,8 +450,8 @@ curl \
 -X POST \
 -d '{
   "external_round_id": "partner-round-id-1",
-  "game_id": "ePz8u6hbncrNzFRCqLbX8e"
-  "game_label": "Starburst"
+  "external_game_id": "ePz8u6hbncrNzFRCqLbX8e"
+  "external_game_label": "Starburst"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds
 ```
@@ -459,10 +459,10 @@ curl \
 
 This method creates a round. A round is a container used for grouping together wagers and payouts that are associated to a user. Any combination of wagers and payouts can be contained within a round, as long as the round has not been closed.
 
-A round can consist of zero or more Wagers, and zero or more Payouts. The choice of how many Wagers and Payouts to include in a round is up to the integration provider.
+A round can consist of zero or more Wagers, and zero or more Payouts. The choice of how many Wagers and Payouts to include in a round is up to the integration partner.
 
 <aside>
-Wagers and Payouts will be presented back to the player using the <code>game_label</code> provided by the Round.
+Wagers and Payouts will be presented back to the player using the <code>external_game_label</code> provided by the Round.
 </aside>
 
 ### URI Parameters
@@ -476,8 +476,8 @@ Wagers and Payouts will be presented back to the player using the <code>game_lab
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
 | external\_round_id | string | partner-round-id-1 | Unique identifier representing a group of wager and/or payout events for a user. |
-| game_id | string | partner-game-id |  Identifies the game generating the wager and/or payout events in the round. |
-| game_label | string | Starburst |  Human readable value presented to the player when accessing transaction history. |
+| external_game_id | string | partner-game-id |  Identifies the game generating the wager and/or payout events in the round. |
+| external_game_label | string | Starburst |  Human readable value presented to the player when accessing transaction history. |
 
 ### Response
 
