@@ -25,7 +25,7 @@ Version | Date | Summary of Changes
 
 ## Quick Reference
 
-All API access is over HTTPS and must be authenticated or a `401 Unauthorized error` will be returned (see Authentication).
+All API access is over HTTPS and must be authenticated or a `401 Unauthorized error` will be returned (see [Authentication](#authentication)).
 
 A `User` corresponds to each unique player in the partner system and contains profile and preference information.
 
@@ -47,7 +47,7 @@ On staging, all API endpoints begin with `https://ns-api-staging.betable.com/lfs
 On production, all API endpoints begin with `https://ns-api.betable.com/lfs/v100`.
 
 ## IP Whitelisting
-The Betable API exposed in this document is not a public API.  In addition to other protocol measures, only a list of static IP Address(es) will be permitted to communicate on this API.
+The Betable API exposed in this document is not a public API.  In addition to other security measures, only a list of static IP Address(es) will be permitted to communicate on this API.
 
 <aside class="warning">
 Any API method calls made from a non-whitelisted IP Address will be blocked.
@@ -61,7 +61,7 @@ curl \
 ...
 ```
 
-`X-API-KEY: [partner-api-key]`
+`X-API-Key: [partner-api-key]`
 
 An API key will be provided to the integration partner which is to be used in all requests to the Betable API unless stated. The API key must be kept secret and should only be used when making requests to the Betable API as a form of authentication.
 
@@ -117,8 +117,8 @@ curl \
 
 The API supports idempotency for safely retrying requests without performing the same operation twice. A unique identifier added to the header on `POST` or `PUT` requests ensures that the same request is not processed multiple times. If a duplicate request is sent, the original response will be returned without any processing. Only successfully processed requests will have their responses stored for idempotency, thus when retrying the same request a new idempotency key does not need to be generated.
 
-<aside class="comment">
-The Betable API will store the idempotency keys and response for 30 days.
+<aside class="notice">
+The Betable API will store the idempotency keys and responses for 30 days.
 </aside>
 
 ## Response Codes and Statuses
@@ -147,6 +147,12 @@ HTTP Status Code | Description
 }
 ```
 
+For each non-`2XX` status code returned, a JSON body will be returned to provide more context about the error encountered.
+
+Name | Type | Description
+ ---| ---| ---
+error\_description | string | A description of the error encountered; see [common errors](#common-error-responses) below or each API method section.
+
 ## Common Data Structures
 
 ### JSON Data Types
@@ -157,11 +163,6 @@ Data Type | JSON Type | Description | Example Value
 `Date` | string | Using the following format: yyyy-MM-dd | 1969-04-20
 `Money` | string | All monetary amounts are represented as a string. | 199.99
 
-For each non-`2XX` status code returned, a JSON body will be returned to provide more context about the error encountered.
-
-Name | Type | Description
- ---| ---| ---
-error\_description | string | A description of the error encountered; see common errors below or each API method section.
 
 ### Common Error Responses
 
@@ -170,7 +171,7 @@ Each API method can return a number of common error responses:
 HTTP Status Code | Error Description
 ---- | -----------
 `400 Bad Request` | Validation error.
-`401 Unauthorized` | Unauthorized, see section: Authentication
+`401 Unauthorized` | Unauthorized, see section: [Authentication](#authentication)
 `500 Internal Error` | Unexpected runtime error.  May try again.
 
 # Health Check
@@ -187,7 +188,7 @@ https://ns-api-staging.betable.com/lfs/v100/health
 
 This method is used to ensure communication with the Betable API is functional. The main usage of this endpoint is to assure that the IP Addresses are properly whitelisted.
 
-<aside class="comment">
+<aside class="notice">
 The <code>X-API-Key</code> is not required to access this API method.
 </aside>
 
@@ -246,13 +247,12 @@ curl \
       "affiliate_program_id": "adwords",
       "affiliate_campaign_id": "ga-campaign-2020-xmas",
     },
-  ],
-  "last_accepted_terms": "1999-12-25 11:59:59.999"
+  ]
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
 `POST /users`
 
-This method is create a new user in the Betable API and should be called at the same time that a new user is created in the partner's platform.
+This method is used to create a new user in the Betable API and should be called at the same time that a new user is created in the partner's platform.
 
 ### Request Parameters
 
@@ -298,7 +298,7 @@ A successful request returns the HTTP `201 Created` status code with the followi
 | user\_id | string | QEaakM0qumTJd5tj | The Betable user\_id as returned from the [Create User](#create-user) method call. |
 
 <aside class="success">
-The <code>user_id</code> returned should be used in subsequent API calls where a <code>user_id</code> is required as part of the URI.
+This <code>user_id</code> is used in subsequent calls when required as part of the URI.
 </aside>
 
 | HTTP Status Code | Error Description |
@@ -339,8 +339,7 @@ curl \
       "affiliate_program_id": "adwords",
       "affiliate_campaign_id": "ga-campaign-2020-xmas",
     },
-  ],
-  "last_accepted_terms": "1999-12-25 11:59:59.999"
+  ]
 }' https://ns-api-staging.betable.com/lfs/v100/users
 ```
 
@@ -381,6 +380,8 @@ This method updates a user's account information.
 
 ### Response
 
+A successful request returns the HTTP `204 No Content` status code with no JSON response body.
+
 | HTTP Status Code | Description |
 | ---| --- |
 | `204 No Content` | Success, No Content |
@@ -402,7 +403,7 @@ https://ns-api-staging.betable.com/lfs/v100\
 
 `POST /users/{user_id}/sessions`
 
-Associate a session to a user. A session should be created during any login event or other distinction associated to a session.
+This method associates a session to a user. A session should be created during any login event or other distinction associated to a session.
 
 ### URI Parameters
 | Parameter | Type | Example | Description |
@@ -422,7 +423,7 @@ The request payload is empty.
 }
 ```
 
-A successful request returns the HTTP `200 OK` status code with the following JSON response body:
+A successful request returns the HTTP `201 Created` status code with the following JSON response body:
 
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
@@ -448,9 +449,8 @@ curl \
 -H "X-API-Key: [partner-api-key]" \
 -X POST \
 -d '{
-{
   "external_round_id": "partner-round-id-1",
-  "game_id": "ePz8u6hbncrNzFRCqLbX8e",
+  "game_id": "ePz8u6hbncrNzFRCqLbX8e"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds
 ```
@@ -458,7 +458,7 @@ curl \
 
 This method creates a round. A round is a container used for grouping together wagers and payouts that are associated to a user. Any combination of wagers and payouts can be contained within a round, as long as the round has not been closed.
 
-One user may share many wager and payout events as long as the game_id and user_id remain the same.
+One round may share many wager and payout events as long as the game_id and user_id remain the same.
 
 ### URI Parameters
 
@@ -497,7 +497,7 @@ This <code>round_id</code> is used in subsequent calls when required as part of 
 | ---| --- |
 | `201 Created` | Success
 | `404 Not Found` | User not found |
-| `404 Not Found` | Game not found |
+| `409 Conflict` | No game exists for `game_id` |
 | `409 Conflict` | Round already exists with `external_round_id` |
 
 ## Close Round
@@ -513,7 +513,7 @@ https://ns-api-staging.betable.com/lfs/v100\
 
 `PUT /users/{user_id}/rounds/{round_id}/close`
 
-This method is used for closing a Round. A round can consist of zero or more Wagers, and zero or more Payouts. After a round is closed then no additional Wagers or Payouts can be associated to the Round.
+This method is used for closing a Round. A round can consist of zero or more Wagers, and zero or more Payouts. Once a round is closed, no additional Wagers or Payouts can be associated to it.
 
 <aside class="warning">
 All Wagers and Payouts must be resolved (ie. settled or void) before the Round can be closed.
@@ -554,14 +554,14 @@ curl \
 -X POST \
 -d '{
   "external_wager_id": "partner-wager-id-1",
-  "amount": "5.00",
+  "amount": "5.00"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds/D0SsdoSIN4FvyslTXnsGDF/wagers
 ```
 
 `POST /users/{user_id}/rounds/{round_id}/wagers`
 
-This method is used to create and authorize a Wager within the supplied round. The player funds required for this transaction will be immediated deducted from the player's account balance.
+This method is used to create and authorize a Wager within the supplied round. The player funds required for this transaction will be immediately deducted from the player's account balance.
 
 An authorized Wager needs to be settled using [Settle Wager](#settle-wager) to complete the wager processing.
 
@@ -646,7 +646,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
@@ -673,7 +673,7 @@ curl \
 This method is used to void (cancel) a previously authorized Wager. Additional contextual information can be provided when voiding the Wager, such as a reason for why the Wager was voided.
 
 <aside class="warning">
-A wager can not be voided after it has been settled; instead a Rollback should be performed.
+A wager cannot be voided after it has been settled; instead a Rollback should be performed.
 </aside>
 
 ### URI Parameters
@@ -696,7 +696,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
@@ -726,7 +726,7 @@ A rollback is permitted on a round that is closed.
 </aside>
 
 <aside class="warning">
-Only Wagers that do not have any associated Settled Payouts can be rolled back.
+Only Wagers that do not have any associated settled Payouts can be rolled back.
 </aside>
 
 ### URI Parameters
@@ -749,7 +749,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Wager not found |
@@ -778,7 +778,7 @@ curl \
 
 `POST /users/{user_id}/rounds/{round_id}/payouts`
 
-This method is used for creating and authorizing a Payout such as when awarding winnings. When possible, a Payout should be associated to a Wager.
+This method is used for creating and authorizing a Payout, such as for awarding winnings to a player. When possible, a Payout should be associated to a Wager.
 
 An authorized Payout needs to be settled using [Settle Payout](#settle-payout) before the funds are transfered to the player's wallet.
 
@@ -793,9 +793,9 @@ An authorized Payout needs to be settled using [Settle Payout](#settle-payout) b
 
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
-| external\_payout\_id | string | partner-wager-id-1 | A unique identifier to map a partner wager request to one in the Betable API. |
+| external\_payout\_id | string | partner-payout-id-1 | A unique identifier to map a partner payout request to one in the Betable API. |
 | amount | Money | 10.00 | The amount of funds to transfer to the user's balance. |
-| source_wager_id| string | rD9c1IqMhlgLlwTEz0xbB3 | Optional. The Betable `wager\_id` that is associated with this payout. |
+| source_wager_id| string | rD9c1IqMhlgLlwTEz0xbB3 | Optional. The Betable `wager_id` that is associated with this payout. |
 
 <aside class="comment">
 The <code>source_wager_id</code> is vital when bonus funds are included in the system for appropriately awarding funds.  It is optional to allow for situations when there is no wager that should be associated.
@@ -833,7 +833,7 @@ This <code>payout_id</code> is used in subsequent calls when required as part of
 | `404 Not Found` | Round not found |
 | `409 Conflict` | Payout with `external_payout_id` already created |
 | `409 Conflict` | Round already closed |
-| `409 Not Found` | Source wager not found |
+| `409 Conflict` | Source wager not found |
 | `409 Conflict` | Source wager is not settled |
 
 
@@ -874,7 +874,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
@@ -923,7 +923,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
@@ -972,7 +972,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
@@ -997,7 +997,7 @@ https://ns-api-staging.betable.com/lfs/v100\
 
 Returns the player's wallet balance. A possible use case for calling this method would be for displaying the player's balance.
 
-<aside class="comment">
+<aside class="notice">
 This API method is provided for convenience though may not serve a purpose in future phases of integration.
 </aside>
 
@@ -1006,10 +1006,6 @@ This API method is provided for convenience though may not serve a purpose in fu
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
 | user\_id | string | QEaakM0qumTJd5tj | The Betable user\_id as returned from the [Create User](#create-user) method call. |
-
-### Request Parameters
-
-No request payload.
 
 ### Response
 
@@ -1029,7 +1025,6 @@ A successful request returns the HTTP `200 OK` status code with the following JS
 | amount | Money | 100.00 | The user's balance to a maximum of 2 decimal places. |
 | currency | string | USD | Currency specified by an ISO-4217 3-letter code. |
 
-### Error Codes
 
 | HTTP Status Code | Error Description |
 | ---| --- |
@@ -1063,7 +1058,7 @@ In order to add funds to the user's wallet (instead of overwriting the player's 
 This method SHOULD NOT be used for resolving a Payout. That is, if a player should be awarded winnings, then the Create Payout method should be used.
 </aside>
 
-<aside class="comment">
+<aside class="notice">
 This API method is provided for convenience though may not serve a purpose in future phases of integration.
 </aside>
 
@@ -1085,7 +1080,7 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `201 Created` | Success
+| `204 No Content` | Success
 | `404 Not Found` | User not found |
 
 # Create Game
@@ -1098,7 +1093,7 @@ curl \
 -d '{
   "external_game_id": "partner-game-id-1",
   "game_name": "The Numeric Alphabet Game",
-  "unencumber_value": "1.00",
+  "unencumber_value": "1.00"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /games
 ```
@@ -1108,7 +1103,7 @@ curl \
 This method associates a game_id with essential information to be used during wallet interactions with Rounds.
 
 <aside class="comment">
-One game can be used by multiple players and multiple rounds.
+One Game can be used by multiple players and multiple rounds.
 </aside>
 
 <aside class="warning">
@@ -1121,9 +1116,8 @@ A Game must be created before it can be interacted with by a player.
 | ---| ---| ---| --- |
 | external\_game\_id | string | partner-game-id-1 | A unique identifier for the game in the partner's platform. |
 | game\_name | string | The Numeric Alphabet Game | A human readable name representing the game. |
-| unencumber\_value | string | 1.00 | Optional. Indicates rate a wager acts to unencumber a bonus requirement.  *Defaults to 1.*
+| unencumber\_value | string | 1.00 | Optional. Indicates rate a wager acts to unencumber a bonus requirement. This value is a string that represents any 2-digit decimal number between 0.01 and 1.00 inclusive. *Defaults to 1.* |
 
-This value is a string that represents any 2-digit decimal number between 0.01 and 1.00 inclusive.|
 
 ### Response
 > Example JSON Response:
@@ -1138,10 +1132,10 @@ A successful request returns the HTTP `201 Created` status code with the followi
 
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
-| game\_id | string | ePz8u6hbncrNzFRCqLbX8e | A unique identifier for the game used for URIs and JSON requests when communicating with the Betable API. |
+| game\_id | string | ePz8u6hbncrNzFRCqLbX8e | Unique identifier associated to a Game |
 
 <aside class="success">
-This <code>game_id</code> is used in subsequent calls when required as part of the URI.
+This <code>game_id</code> is used in subsequent calls when required as part of the request body.
 </aside>
 
 | HTTP Status Code | Error Description |
