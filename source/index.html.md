@@ -1055,7 +1055,7 @@ Set Balance method completely overwrites the player's balance.
 In order to add funds to the user's wallet (instead of overwriting the player's balance), a Get Balance method call would have to be performed first to retrieve the user's existing balance, followed by a Set Balance method call using the value returned from Get Balance, adding the appropriate amount to the value returned from the user's current balance.
 
 <aside class="warning">
-This method <i>should not</i> be used for resolving a Payout. That is, if a player should be awarded winnings, then the <a href="#create-payout">Create Payout</a> method should be used.
+This method <b><i>should not</i></b> be used for resolving a Payout. That is, if a player should be awarded winnings, then the <a href="#create-payout">Create Payout</a> method should be used.
 </aside>
 
 <aside class="notice">
