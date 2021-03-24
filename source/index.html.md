@@ -265,7 +265,7 @@ This method is used to create a new user in the Betable API and should be called
 | date\_of\_birth | Date | 1969-04-20 | Optional. The user's date of birth. |
 | mobile\_phone | string | 18881112223 | Optional. The user's mobile phone number. |
 | address | object | \- | Optional. |
-| address.address1 | string | Unit 7 | Optional. The user's address. Note that formatting of the user's address and the use of the subsequent address fields may vary by region. |
+| address.address1 | string | Unit 7 | The user's address. Note that formatting of the user's address and the use of the subsequent address fields may vary by region. |
 | address.address2 | string | Cornell Tower | Optional. Additional address information, may vary by region. |
 | address.address3 | string | Gladwell Street | Optional. Additional address information, may vary by region. |
 | address.city | string | Springfield | The user's city/town. |
@@ -362,7 +362,7 @@ This method updates a user's account information.
 | date\_of\_birth | Date | 1969-04-20 | Optional. The user's date of birth. |
 | mobile\_phone | string | 18881112223 | Optional. The user's mobile phone number. |
 | address | object | \- | Optional. |
-| address.address1 | string | Unit 7 | Optional. The user's address. Note that formatting of the user's address and the use of the subsequent address fields may vary by region. |
+| address.address1 | string | Unit 7 | The user's address. Note that formatting of the user's address and the use of the subsequent address fields may vary by region. |
 | address.address2 | string | Cornell Tower | Optional. Additional address information, may vary by region. |
 | address.address3 | string | Gladwell Street | Optional. Additional address information, may vary by region. |
 | address.city | string | Springfield | The user's city/town. |
@@ -450,7 +450,8 @@ curl \
 -X POST \
 -d '{
   "external_round_id": "partner-round-id-1",
-  "game_id": "ePz8u6hbncrNzFRCqLbX8e"
+  "external_game_id": "ePz8u6hbncrNzFRCqLbX8e",
+  "external_game_label": "Starburst"
 }' https://ns-api-staging.betable.com/lfs/v100\
 /users/QEaakM0qumTJd5tj/rounds
 ```
@@ -458,7 +459,11 @@ curl \
 
 This method creates a round. A round is a container used for grouping together wagers and payouts that are associated to a user. Any combination of wagers and payouts can be contained within a round, as long as the round has not been closed.
 
-One round may share many wager and payout events as long as the game_id and user_id remain the same.
+A round can consist of zero or more Wagers, and zero or more Payouts. The choice of how many Wagers and Payouts to include in a round is up to the integration partner.
+
+<aside>
+Wagers and Payouts will be presented back to the player using the <code>external_game_label</code> provided for the Round.
+</aside>
 
 ### URI Parameters
 
@@ -471,7 +476,8 @@ One round may share many wager and payout events as long as the game_id and user
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
 | external\_round_id | string | partner-round-id-1 | Unique identifier representing a group of wager and/or payout events for a user. |
-| game\_id | string | ePz8u6hbncrNzFRCqLbX8e |  The Betable game\_id as returned from the [Create Game](#create-game) method call. |
+| external_game_id | string | partner-game-id |  Identifies the game generating the wager and/or payout events in the round. |
+| external_game_label | string | Starburst |  Human readable value presented to the player when accessing transaction history. |
 
 ### Response
 
@@ -755,7 +761,6 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | `404 Not Found` | Wager not found |
 | `409 Conflict` | Wager was already rolled back |
 | `409 Conflict` | Wager already voided |
-| `409 Conflict` | Wager already forfeited |
 | `409 Conflict` | Wager has associated payouts; rollback payout first |
 
 
@@ -972,13 +977,12 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 
 | HTTP Status Code | Error Description |
 | ---| --- |
-| `204 No Content` | Success
+| `204 No Content` | Success |
 | `404 Not Found` | User not found |
 | `404 Not Found` | Round not found |
 | `404 Not Found` | Payout not found |
 | `409 Conflict` | Payout already rolled back |
 | `409 Conflict` | Payout already voided |
-| `409 Conflict` | Payout already forfeited |
 
 # Balances
 
@@ -1023,8 +1027,16 @@ A successful request returns the HTTP `200 OK` status code with the following JS
 | Parameter | Type | Example | Description |
 | ---| ---| ---| --- |
 | amount | Money | 100.00 | The user's balance to a maximum of 2 decimal places. |
-| currency | string | USD | Currency specified by an ISO-4217 3-letter code. |
+| currency | string | USD | Currency.  When relevant this will reference ISO-4217 3-letter code. |
 
+
+<aside class="comment">
+Currency code <code>XXX</code> will be used to represent simulated currencies.
+</aside>
+
+<aside class="comment">
+Possible currencies returned are setup within the Betable API during the initial phases of partner integration
+</aside>
 
 | HTTP Status Code | Error Description |
 | ---| --- |
@@ -1082,63 +1094,3 @@ A successful request returns the HTTP `204 No Content` status code with no JSON 
 | ---| --- |
 | `204 No Content` | Success
 | `404 Not Found` | User not found |
-
-# Create Game
-
-```shell
-curl \
--H "Content-Type: application/json" \
--H "X-API-Key: [partner-api-key]" \
--X POST \
--d '{
-  "external_game_id": "partner-game-id-1",
-  "game_name": "The Numeric Alphabet Game",
-  "unencumber_value": "1.00"
-}' https://ns-api-staging.betable.com/lfs/v100\
-/games
-```
-
-`POST /games`
-
-This method associates a game_id with essential information to be used during wallet interactions with Rounds.
-
-<aside class="comment">
-One Game can be used by multiple players and multiple rounds.
-</aside>
-
-<aside class="warning">
-A Game must be created before it can be interacted with by a player.
-</aside>
-
-### Request Parameters
-
-| Parameter | Type | Example | Description |
-| ---| ---| ---| --- |
-| external\_game\_id | string | partner-game-id-1 | A unique identifier for the game in the partner's platform. |
-| game\_name | string | The Numeric Alphabet Game | A human readable name representing the game. |
-| unencumber\_value | string | 1.00 | Optional. Indicates rate a wager acts to unencumber a bonus requirement. This value is a string that represents any 2-digit decimal number between 0.01 and 1.00 inclusive. *Defaults to 1.* |
-
-
-### Response
-> Example JSON Response:
-
-```json
-{
-  "game_id": "ePz8u6hbncrNzFRCqLbX8e"
-}
-```
-
-A successful request returns the HTTP `201 Created` status code with the following JSON response body:
-
-| Parameter | Type | Example | Description |
-| ---| ---| ---| --- |
-| game\_id | string | ePz8u6hbncrNzFRCqLbX8e | Unique identifier associated to a Game |
-
-<aside class="success">
-This <code>game_id</code> is used in subsequent calls when required as part of the request body.
-</aside>
-
-| HTTP Status Code | Error Description |
-| ---| --- |
-| `201 Created` | Success
-| `409 Conflict` | Game with `external_game_id` already exists |
